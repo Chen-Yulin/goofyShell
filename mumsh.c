@@ -8,13 +8,14 @@ int main(){
         cmd_t type = parse(input_buffer, parsedArgs);
         switch (type) {
             case buildin_cmd:
-                printf("exec buildin_cmd\n");
+                //printf("exec buildin_cmd\n");
                 execute_buildin(parsedArgs);
                 break;
+            case simple_cmd:
+                execute_simple(parsedArgs);
             default:
                 break;
         }
-
     }
     return 0;
 }

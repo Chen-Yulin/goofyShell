@@ -16,7 +16,8 @@ typedef enum{
     DUPLICATED_OUTPUT_FILE,
     SYNTEX_ERROR,
     MISSING_PROGRAM,
-    CD_NONE_EXIST_DIR
+    CD_NONE_EXIST_DIR,
+    FORK_ERROR
 }err_t;
 
 typedef enum{
