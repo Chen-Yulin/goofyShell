@@ -1,10 +1,16 @@
 #include "buildin.h"
 
 void exec_exit(){
+    printf("exit\n");
     exit(0);
 }
 void exec_cd(char * path){
     chdir(path);
+}
+
+void exec_pwd(){
+    char buf[1024];
+    printf("%s\n", getcwd(buf,sizeof(buf)));
 }
 
 void execute_buildin(char **parsed){
@@ -13,7 +19,8 @@ void execute_buildin(char **parsed){
     }else if (strcmp(parsed[0], "cd") == 0) {
         printf("cd to %s\n", parsed[1]);
         exec_cd(parsed[1]);
-    }else if (strcmp(parsed[0], "ls") == 0) {
+    }else if (strcmp(parsed[0], "pwd") == 0) {
+        exec_pwd();
     }else{
     }
 }

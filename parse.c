@@ -21,7 +21,7 @@ cmd_t judgeCmdType(char * parsedHead){
         return buildin_cmd;
     }else if (strcmp(parsedHead, "cd") == 0) {
         return buildin_cmd;
-    }else if (strcmp(parsedHead, "ls") == 0) {
+    }else if (strcmp(parsedHead, "pwd") == 0) {
         return buildin_cmd;
     }else{
         return simple_cmd;

@@ -8,7 +8,7 @@
 
 
 void exec_exit();
-void exec_ls();
+void exec_pwd();
 void exec_cd(char * path);
 void execute_buildin(char ** parsed);
 
