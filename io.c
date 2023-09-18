@@ -1,6 +1,6 @@
 #include "io.h"
 
-char read_buffer[BUFFER_SIZE];
+char input_buffer[BUFFER_SIZE];
 char output_buffer[BUFFER_SIZE];
 
 void show_shell_name(){
@@ -26,5 +26,5 @@ void read_cmd_into_buffer(char* res_buffer){
 
 void get_cmd_input(){
     show_shell_name();
-    read_cmd_into_buffer(read_buffer);
+    read_cmd_into_buffer(input_buffer);
 }
