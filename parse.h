@@ -1,7 +1,7 @@
 #ifndef PARSE_H
 #define PARSE_H
 
-#define MAXPARSE 10
+#define MAXPARSE 16
 
 #include "io.h"
 #include<string.h>
@@ -28,6 +28,7 @@ typedef enum{
 }cmd_t;
 
 
+void printParsed(char ** parsed);
 cmd_t parse(char * input, char ** parsed);
 
 

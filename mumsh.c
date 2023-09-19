@@ -13,6 +13,7 @@ int main(){
                 break;
             case simple_cmd:
                 execute_simple(parsedArgs);
+                break;
             default:
                 break;
         }

@@ -1,5 +1,12 @@
 #include "parse.h"
 
+void printParsed(char ** parsed){
+    for (int j = 0;j<MAXPARSE;j++) {
+        printf("%s ", parsed[j]);
+    }
+    printf("\n");
+}
+
 void clearStringArray(char ** input, int num){
     for (int i = 0; i < num; i++) {
         input[i] = "";
@@ -12,6 +19,9 @@ void parseSpace(char * str, char ** parsed){
         if(strlen(parsed[i]) != 0){
             i++;
         }
+    }
+    for (int j = i;j<MAXPARSE;j++) {
+        parsed[j] = NULL;
     }
 }
 

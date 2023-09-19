@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include<sys/types.h>
 #include<sys/wait.h>
+#include <stdbool.h>
+#include <fcntl.h>
 #include "parse.h"
 
 err_t execute_simple(char ** parsed);
