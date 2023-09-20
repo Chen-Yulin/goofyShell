@@ -5,7 +5,6 @@
 # forbidden
 *
 .*
-.tar
 
 # allowed
 !.gitignore
