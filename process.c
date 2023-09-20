@@ -8,19 +8,29 @@ bool isRedirectionSign(char* c){
     }
 }
 
+bool fetchCommand(char ** parsed, char ** argv){
+    int ip = 0;
+    int ic = 0;
+    bool redirected = false;
+    while (parsed[ip] != NULL) {
+        if (isRedirectionSign(parsed[ip])) {
+            redirected = true;
+            ip += 2;
+        }else{
+            argv[ic] = parsed[ip];
+            ic++;
+            ip++;
+        }
+    }
+    return redirected;
+}
+
 err_t execute_simple(char ** parsed){
     // split the part without redirection sign
     char * argv[MAXPARSE] = {NULL};
     int argc = 0;
-    int redirected = false;
-    while (argc < MAXPARSE-1) {
-        if (isRedirectionSign(parsed[argc])) {
-            redirected = true;
-            break;
-        }
-        argv[argc] = parsed[argc];
-        argc++;
-    }
+    int redirected = fetchCommand(parsed, argv);
+    //printParsed(parsed);
     //printParsed(argv);
     
     // create new process

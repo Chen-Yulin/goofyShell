@@ -5,6 +5,7 @@
 
 #include "io.h"
 #include<string.h>
+#include <stdbool.h>
 
 
 typedef enum{
