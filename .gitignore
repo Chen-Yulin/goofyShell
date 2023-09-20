@@ -14,3 +14,4 @@
 !*.c
 !*.md
 !*.h
+!Makefile
