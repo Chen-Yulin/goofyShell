@@ -26,6 +26,9 @@ bool fetchCommand(char ** parsed, char ** argv){
 }
 
 err_t execute_simple(char ** parsed){
+    if (parsed[0] == NULL) {
+        return NO_ERROR;
+    }
     // split the part without redirection sign
     char * argv[MAXPARSE] = {NULL};
     int argc = 0;

@@ -84,7 +84,9 @@ void parseSpace(char * str, char ** parsed){
 }
 
 cmd_t judgeCmdType(char * parsedHead){
-    //printf("%s\n", parsedHead);
+    if (parsedHead == NULL) {
+        return none_cmd;
+    }
     if (strcmp(parsedHead, "exit") == 0) {
         return buildin_cmd;
     }else if (strcmp(parsedHead, "cd") == 0) {
