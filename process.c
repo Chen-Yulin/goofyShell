@@ -87,3 +87,5 @@ err_t execute_simple(char **parsed) {
         return NO_ERROR;
     }
 }
+
+err_t execute_pipe(char *parsed[MAXPIPE][MAXPARSE]) { return NO_ERROR; }

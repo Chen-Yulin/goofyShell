@@ -1,8 +1,18 @@
 #include "parse.h"
 
+void printParsedPiped(char *pipe[MAXPIPE][MAXPARSE], int cnt) {
+    for (int i = 0; i < cnt; i++) {
+        printParsed(pipe[i]);
+    }
+}
+
 void printParsed(char **parsed) {
-    for (int j = 0; j < MAXPARSE; j++) {
-        printf("%s ", parsed[j]);
+    for (int i = 0; i < MAXPARSE; i++) {
+        if (parsed[i] != NULL) {
+            printf("%s ", parsed[i]);
+        } else {
+            printf("null ");
+        }
     }
     printf("\n");
 }
@@ -82,6 +92,16 @@ void parseSpace(char *str, char **parsed) {
         parsed[j] = NULL;
     }
 }
+int parsePipe(char *str, char **piped) {
+    int i;
+    for (i = 0; i < MAXPIPE; i++) {
+        piped[i] = strsep(&str, "|");
+        if (piped[i] == NULL)
+            break;
+    }
+
+    return i;
+}
 
 cmd_t judgeCmdType(char *parsedHead) {
     if (parsedHead == NULL) {
@@ -98,11 +118,24 @@ cmd_t judgeCmdType(char *parsedHead) {
     }
 }
 
-cmd_t parse(char *input, char **parsed) {
-    clearStringArray(parsed, MAXPARSE);
+cmd_t parse(char *input, char *parsed[MAXPIPE][MAXPARSE]) {
+    clearStringArray(parsed[0], MAXPARSE);
     addMissingSpace(input);
-    parseSpace(input, parsed);
-    cmd_t type = judgeCmdType(parsed[0]);
-    // printf("cmd type %d\n", type);
+
+    char *pipedInput[MAXPIPE];
+    int pipeCnt = parsePipe(input, pipedInput);
+    printf("%d\n", pipeCnt);
+
+    for (int i = 0; i < pipeCnt; i++) {
+        parseSpace(pipedInput[i], parsed[i]);
+    }
+
+    printParsedPiped(parsed, pipeCnt);
+    cmd_t type = none_cmd;
+    if (pipeCnt > 1) {
+        return pipe_cmd;
+    } else {
+        type = judgeCmdType(parsed[0][0]);
+    }
     return type;
 }
