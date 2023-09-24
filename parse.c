@@ -23,6 +23,12 @@ void clearStringArray(char **input, int num) {
     }
 }
 
+void clearParsed(char *parsed[MAXPIPE][MAXPARSE]) {
+    for (int i = 1; i <= MAXPIPE; i++) {
+        parsed[i][0] = NULL;
+    }
+}
+
 void stringSag(char *str, int num) {
     for (int i = num; i > 0; i--) {
         str[i] = str[i - 1];
@@ -120,6 +126,7 @@ cmd_t judgeCmdType(char *parsedHead) {
 
 cmd_t parse(char *input, char *parsed[MAXPIPE][MAXPARSE]) {
     clearStringArray(parsed[0], MAXPARSE);
+    clearParsed(parsed);
     addMissingSpace(input);
 
     char *pipedInput[MAXPIPE];

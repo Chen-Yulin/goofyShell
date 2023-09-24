@@ -18,7 +18,8 @@ typedef enum {
     SYNTEX_ERROR,
     MISSING_PROGRAM,
     CD_NONE_EXIST_DIR,
-    FORK_ERROR
+    FORK_ERROR,
+    OTHER_ERROR
 } err_t;
 
 typedef enum { none_cmd, buildin_cmd, simple_cmd, pipe_cmd } cmd_t;

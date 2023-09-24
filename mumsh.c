@@ -14,7 +14,7 @@ int main() {
             execute_simple(parsedArgs[0]);
             break;
         case pipe_cmd:
-            execute_simple(parsedArgs[0]);
+            execute_pipe(parsedArgs);
             break;
         default:
             break;

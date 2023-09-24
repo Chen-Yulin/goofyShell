@@ -26,6 +26,15 @@ bool fetchCommand(char **parsed, char **argv) {
     return redirected;
 }
 
+void RecursiveCreateChild(int total, int current, int pipefd[MAXPIPE - 1][2]) {
+    pid_t p = fork();
+    if (p == 0) {
+        // child
+    } else {
+        RecursiveCreateChild(total, current + 1, pipefd);
+    }
+}
+
 err_t execute_simple(char **parsed) {
     if (parsed[0] == NULL) {
         return NO_ERROR;
@@ -88,4 +97,21 @@ err_t execute_simple(char **parsed) {
     }
 }
 
-err_t execute_pipe(char *parsed[MAXPIPE][MAXPARSE]) { return NO_ERROR; }
+err_t execute_pipe(char *parsed[MAXPIPE][MAXPARSE]) {
+    int pipeCnt = 0;
+    for (int i = 0; i < MAXPIPE; i++) {
+        if (parsed[i][0] != NULL) {
+            pipeCnt++;
+        } else {
+            break;
+        }
+    }
+    int pipefd[MAXPIPE - 1][2];
+    for (int i = 0; i < pipeCnt - 1; i++) {
+        if (pipe(pipefd[i]) < 0) {
+            return OTHER_ERROR;
+        }
+    }
+
+    return NO_ERROR;
+}
