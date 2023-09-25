@@ -10,7 +10,9 @@
 !.gitignore
 !.gitattributes
 !.drone.yml
+!src/
+!Makefile
+!CMakeLists.txt
 !*.c
 !*.md
 !*.h
-!Makefile
