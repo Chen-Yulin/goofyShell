@@ -131,13 +131,13 @@ cmd_t parse(char *input, char *parsed[MAXPIPE][MAXPARSE]) {
 
     char *pipedInput[MAXPIPE];
     int pipeCnt = parsePipe(input, pipedInput);
-    printf("%d\n", pipeCnt);
+    // printf("%d\n", pipeCnt);
 
     for (int i = 0; i < pipeCnt; i++) {
         parseSpace(pipedInput[i], parsed[i]);
     }
 
-    printParsedPiped(parsed, pipeCnt);
+    // printParsedPiped(parsed, pipeCnt);
     cmd_t type = none_cmd;
     if (pipeCnt > 1) {
         return pipe_cmd;
