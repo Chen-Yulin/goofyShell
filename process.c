@@ -85,13 +85,21 @@ void RecursiveCreateChild(int total, int current, int pipefd[MAXPIPE - 1][2],
     if (p == 0) {
         // child
         if (current < total - 1) {
-            dup2(pipefd[current][1], STDOUT_FILENO);
+            close(pipefd[current][READ]);
+            dup2(pipefd[current][WRITE], STDOUT_FILENO);
         }
         if (current > 0) {
-            dup2(pipefd[current - 1][0], STDIN_FILENO);
+            close(pipefd[current - 1][WRITE]);
+            dup2(pipefd[current - 1][READ], STDIN_FILENO);
         }
         execute_cmd(parsed[current]);
     } else {
+        if (current < total - 1) {
+            close(pipefd[current][WRITE]);
+        }
+        if (current > 0) {
+            close(pipefd[current - 1][READ]);
+        }
         RecursiveCreateChild(total, current + 1, pipefd, parsed);
         return;
     }
