@@ -117,21 +117,55 @@ err_t execute_simple(char **parsed) {
 }
 
 err_t execute_pipe(char *parsed[MAXPIPE][MAXPARSE]) {
-    int pipeCnt = 0;
-    for (int i = 0; i < MAXPIPE; i++) {
-        if (parsed[i][0] != NULL) {
-            pipeCnt++;
-        } else {
-            break;
-        }
+    // 0 is read end, 1 is write end
+    int pipefd[2];
+    pid_t p1, p2;
+
+    if (pipe(pipefd) < 0) {
+        printf("\nPipe could not be initialized");
+        return OTHER_ERROR;
     }
-    int pipefd[MAXPIPE - 1][2];
-    for (int i = 0; i < pipeCnt - 1; i++) {
-        if (pipe(pipefd[i]) < 0) {
+    p1 = fork();
+    if (p1 < 0) {
+        printf("\nCould not fork");
+        return OTHER_ERROR;
+    }
+
+    if (p1 == 0) {
+        // Child 1 executing..
+        // It only needs to write at the write end
+        close(pipefd[0]);
+        dup2(pipefd[1], STDOUT_FILENO);
+        close(pipefd[1]);
+
+        if (execvp(parsed[0][0], parsed[0]) < 0) {
+            printf("\nCould not execute command 1..");
+            exit(0);
+        }
+    } else {
+        // Parent executing
+        p2 = fork();
+
+        if (p2 < 0) {
+            printf("\nCould not fork");
             return OTHER_ERROR;
         }
-    }
-    RecursiveCreateChild(pipeCnt, 0, pipefd, parsed);
 
+        // Child 2 executing..
+        // It only needs to read at the read end
+        if (p2 == 0) {
+            close(pipefd[1]);
+            dup2(pipefd[0], STDIN_FILENO);
+            close(pipefd[0]);
+            if (execvp(parsed[1][0], parsed[1]) < 0) {
+                printf("\nCould not execute command 2..");
+                exit(0);
+            }
+        } else {
+            // parent executing, waiting for two children
+            wait(NULL);
+            wait(NULL);
+        }
+    }
     return NO_ERROR;
 }
