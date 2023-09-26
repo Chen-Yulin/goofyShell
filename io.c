@@ -17,16 +17,21 @@ void show_shell_name() {
 
 void read_cmd_into_buffer(char *res_buffer) {
     int index = 0;
-    char c = 0;
-    while ((c = (char)getchar())) {
+    int c = 0;
+    while ((c = getchar())) {
         if (c == EOF) {
-            // exit
-        }
-        if (c == '\n') {
+            if (index == 0) {
+                // exit
+                printf("\nexit\n");
+                exit(0);
+            } else {
+                break;
+            }
+        } else if (c == '\n') {
             res_buffer[index++] = '\0';
             break;
         } else {
-            res_buffer[index++] = c;
+            res_buffer[index++] = (char)c;
         }
     }
 }

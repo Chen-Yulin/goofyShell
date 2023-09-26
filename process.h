@@ -1,6 +1,7 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
+#include "buildin.h"
 #include "parse.h"
 #include <fcntl.h>
 #include <stdbool.h>

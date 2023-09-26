@@ -2,6 +2,7 @@
 
 int main() {
     char *parsedArgs[MAXPIPE][MAXPARSE];
+    register_handler();
     while (1) {
         get_cmd_input();
         cmd_t type = parse(input_buffer, parsedArgs);
