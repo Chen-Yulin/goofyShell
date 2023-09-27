@@ -14,6 +14,9 @@ int main() {
         case simple_cmd:
             execute_simple(parsedArgs[0]);
             break;
+        case buildin_stdout_cmd:
+            execute_simple(parsedArgs[0]);
+            break;
         case pipe_cmd:
             execute_pipe(parsedArgs);
             break;

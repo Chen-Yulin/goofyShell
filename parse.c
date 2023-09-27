@@ -118,7 +118,7 @@ cmd_t judgeCmdType(char *parsedHead) {
     } else if (strcmp(parsedHead, "cd") == 0) {
         return buildin_cmd;
     } else if (strcmp(parsedHead, "pwd") == 0) {
-        return buildin_cmd;
+        return buildin_stdout_cmd;
     } else {
         return simple_cmd;
     }

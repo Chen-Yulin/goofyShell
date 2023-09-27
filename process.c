@@ -1,5 +1,12 @@
 #include "process.h"
 
+void close_all_pipe(int pipefd[MAXPIPE - 1][2]) {
+    for (int i = 0; i < MAXPIPE - 1; i++) {
+        close(pipefd[i][READ]);
+        close(pipefd[i][WRITE]);
+    }
+}
+
 bool isRedirectionSign(char *c) {
     if (c != NULL) {
         return strcmp(c, "<") == 0 || strcmp(c, ">") == 0 ||
@@ -63,8 +70,19 @@ err_t execute_cmd(char **parsed) {
     }
 
     // excute command
-    if (execvp(argv[0], argv) < 0) {
-        return NONE_EXIST_PROGRAM;
+    cmd_t type = judgeCmdType(argv[0]);
+    switch (type) {
+    case buildin_stdout_cmd:
+        execute_buildin(argv);
+        exit(0);
+        break;
+    case simple_cmd:
+        if (execvp(argv[0], argv) < 0) {
+            return NONE_EXIST_PROGRAM;
+        }
+        break;
+    default:
+        break;
     }
     return NO_ERROR;
 }
@@ -72,6 +90,7 @@ err_t execute_cmd(char **parsed) {
 void RecursiveCreateChild(int total, int current, int pipefd[MAXPIPE - 1][2],
                           char *parsed[MAXPIPE][MAXPARSE]) {
     if (current == total) {
+        close_all_pipe(pipefd);
         for (int i = 0; i < total; i++) {
             wait(NULL);
         }
@@ -85,21 +104,14 @@ void RecursiveCreateChild(int total, int current, int pipefd[MAXPIPE - 1][2],
     if (p == 0) {
         // child
         if (current < total - 1) {
-            close(pipefd[current][READ]);
             dup2(pipefd[current][WRITE], STDOUT_FILENO);
         }
         if (current > 0) {
-            close(pipefd[current - 1][WRITE]);
             dup2(pipefd[current - 1][READ], STDIN_FILENO);
         }
+        close_all_pipe(pipefd);
         execute_cmd(parsed[current]);
     } else {
-        if (current < total - 1) {
-            close(pipefd[current][WRITE]);
-        }
-        if (current > 0) {
-            close(pipefd[current - 1][READ]);
-        }
         RecursiveCreateChild(total, current + 1, pipefd, parsed);
         return;
     }
@@ -139,6 +151,7 @@ err_t execute_pipe(char *parsed[MAXPIPE][MAXPARSE]) {
             return OTHER_ERROR;
         }
     }
+
     RecursiveCreateChild(pipeCnt, 0, pipefd, parsed);
 
     return NO_ERROR;

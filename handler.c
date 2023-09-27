@@ -2,6 +2,7 @@
 
 void signal_handler(int signo) {
     if (signo == 2) {
+        // exit(0);
     }
 }
 void register_handler() {
