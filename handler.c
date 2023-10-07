@@ -2,7 +2,10 @@
 
 void signal_handler(int signo) {
     if (signo == 2) {
-        // exit(0);
+        if (jobNum == 0) {
+            printf("\nmumsh $ ");
+            fflush(stdout);
+        }
     }
 }
 void register_handler() {

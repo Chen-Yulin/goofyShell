@@ -1,6 +1,7 @@
 #ifndef HANDLER_H
 #define HANDLER_H
 
+#include "job.h"
 #include "signal.h"
 #include "stdio.h"
 #include "stdlib.h"

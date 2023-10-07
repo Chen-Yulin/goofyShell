@@ -1,6 +1,7 @@
 #ifndef IO_H
 #define IO_H
 
+#include "job.h"
 #include <stdio.h>
 #include <stdlib.h>
 #define BUFFER_SIZE 1024

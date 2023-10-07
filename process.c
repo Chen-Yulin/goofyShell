@@ -90,9 +90,11 @@ err_t execute_cmd(char **parsed) {
 void RecursiveCreateChild(int total, int current, int pipefd[MAXPIPE - 1][2],
                           char *parsed[MAXPIPE][MAXPARSE]) {
     if (current == total) {
-        close_all_pipe(pipefd);
+        // close_all_pipe(pipefd);
         for (int i = 0; i < total; i++) {
             wait(NULL);
+            jobNum--;
+            printJobNum();
         }
         return;
     }
@@ -105,13 +107,22 @@ void RecursiveCreateChild(int total, int current, int pipefd[MAXPIPE - 1][2],
         // child
         if (current < total - 1) {
             dup2(pipefd[current][WRITE], STDOUT_FILENO);
+            close(pipefd[current][READ]);
         }
         if (current > 0) {
             dup2(pipefd[current - 1][READ], STDIN_FILENO);
+            close(pipefd[current - 1][WRITE]);
         }
-        close_all_pipe(pipefd);
         execute_cmd(parsed[current]);
     } else {
+        jobNum++;
+        printJobNum();
+        if (current < total - 1) {
+            close(pipefd[current][WRITE]);
+        }
+        if (current > 0) {
+            close(pipefd[current - 1][READ]);
+        }
         RecursiveCreateChild(total, current + 1, pipefd, parsed);
         return;
     }
@@ -123,6 +134,8 @@ err_t execute_simple(char **parsed) {
     }
 
     // create new process
+    jobNum++;
+    printJobNum();
     pid_t pid = fork();
     if (pid == -1) {
         return FORK_ERROR;
@@ -132,6 +145,8 @@ err_t execute_simple(char **parsed) {
     } else {
         // waiting for child to terminate
         wait(NULL);
+        jobNum--;
+        printJobNum();
         return NO_ERROR;
     }
 }

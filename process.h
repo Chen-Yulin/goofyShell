@@ -2,6 +2,7 @@
 #define PROCESS_H
 
 #include "buildin.h"
+#include "job.h"
 #include "parse.h"
 #include <fcntl.h>
 #include <stdbool.h>
