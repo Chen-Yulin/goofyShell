@@ -32,7 +32,7 @@ bool fetchCommand(char **parsed, char **argv) {
     }
     return redirected;
 }
-err_t execute_cmd(char **parsed) {
+err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
     char *argv[MAXPARSE] = {NULL};
     int argc = 0;
     int redirected = fetchCommand(parsed, argv);
@@ -40,9 +40,18 @@ err_t execute_cmd(char **parsed) {
     // solve redirection
     if (redirected) {
         int index = argc;
+
+        int inputCnt = pipeIn ? 1 : 0;
+        int outputCnt = pipeOut ? 1 : 0;
         while (parsed[index] != NULL) {
             if (strcmp(parsed[index], ">") == 0) {
                 index++;
+                outputCnt++;
+
+                if (outputCnt > 1) {
+                    exit_err(DUPLICATED_OUTPUT_FILE, "error");
+                }
+
                 char *fileName = parsed[index];
                 // printf("%s\n", fileName);
                 int fd = open(fileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
@@ -53,6 +62,12 @@ err_t execute_cmd(char **parsed) {
                 close(fd);
             } else if (strcmp(parsed[index], "<") == 0) {
                 index++;
+                inputCnt++;
+
+                if (inputCnt > 1) {
+                    exit_err(DUPLICATED_INPUT_FILE, "error");
+                }
+
                 char *fileName = parsed[index];
                 // printf("%s\n", fileName);
                 int fd = open(fileName, O_RDONLY);
@@ -63,6 +78,12 @@ err_t execute_cmd(char **parsed) {
                 close(fd);
             } else if (strcmp(parsed[index], ">>") == 0) {
                 index++;
+                outputCnt++;
+
+                if (outputCnt > 1) {
+                    exit_err(DUPLICATED_OUTPUT_FILE, "error");
+                }
+
                 // printf("append\n");
                 char *fileName = parsed[index];
                 // printf("%s\n", fileName);
@@ -115,15 +136,19 @@ void RecursiveCreateChild(int total, int current, int pipefd[MAXPIPE - 1][2],
     }
     if (p == 0) {
         // child
+        bool pipeIn = false;
+        bool pipeOut = false;
         if (current < total - 1) {
+            pipeOut = true;
             dup2(pipefd[current][WRITE], STDOUT_FILENO);
             close(pipefd[current][READ]);
         }
         if (current > 0) {
+            pipeIn = true;
             dup2(pipefd[current - 1][READ], STDIN_FILENO);
             close(pipefd[current - 1][WRITE]);
         }
-        execute_cmd(parsed[current]);
+        execute_cmd(parsed[current], pipeIn, pipeOut);
     } else {
         jobNum++;
         printJobNum();
@@ -150,7 +175,7 @@ err_t execute_simple(char **parsed) {
     if (pid == -1) {
         return OTHER_ERROR;
     } else if (pid == 0) {
-        execute_cmd(parsed);
+        execute_cmd(parsed, false, false);
         exit(0);
     } else {
         // waiting for child to terminate
