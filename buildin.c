@@ -4,7 +4,11 @@ void exec_exit() {
     printf("exit\n");
     exit(0);
 }
-void exec_cd(char *path) { chdir(path); }
+void exec_cd(char *path) {
+    if (chdir(path) < 0) {
+        exit_err(CD_NONE_EXIST_DIR, path);
+    }
+}
 
 void exec_pwd() {
     char buf[1024];

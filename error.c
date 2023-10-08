@@ -37,6 +37,10 @@ void exit_err(err_t code, char *generater) {
         fputs(generater, stderr);
         fputs(": missing program\n", stderr);
         return;
+    case CD_NONE_EXIST_DIR:
+        fputs(generater, stderr);
+        fputs(": No such file or directory\n", stderr);
+        return;
     default:
         fputs(generater, stderr);
         fputs(": some errors occur\n", stderr);
