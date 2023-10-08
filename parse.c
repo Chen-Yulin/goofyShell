@@ -99,7 +99,7 @@ void parseSpace(char *str, char **parsed) {
     }
 }
 int parsePipe(char *str, char **piped) {
-    int i;
+    int i = 0;
     for (i = 0; i < MAXPIPE; i++) {
         piped[i] = strsep(&str, "|");
         if (piped[i] == NULL)
