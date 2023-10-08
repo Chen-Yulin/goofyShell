@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=gnu17 -O2 -Wall -Wextra -Wconversion -pedantic -Wno-unused-result -g
+CFLAGS = -std=gnu17 -Wvla -Wall -Wextra -Werror -Wpedantic -Wno-unused-result -Wconversion -g
 MUMSH_SRC = *.c
 MUMSH_H = *.h
 MUMSH = mumsh

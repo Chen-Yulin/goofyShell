@@ -22,7 +22,7 @@ void exit_err(err_t code, char *generater) {
         break;
     case DUPLICATED_OUTPUT_FILE:
         fputs(generater, stderr);
-        fputs(": duplicated input redirection\n", stderr);
+        fputs(": duplicated output redirection\n", stderr);
         break;
     case SYNTEX_ERROR:
         fputs("syntax error near unexpected token `", stderr);
