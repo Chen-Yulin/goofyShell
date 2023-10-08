@@ -33,7 +33,7 @@ bool fetchCommand(char **parsed, char **argv) {
     return redirected;
 }
 
-bool validFileName(char *name) {
+bool validateFileName(char *name) {
     if (name == NULL) {
         return false;
     }
@@ -43,6 +43,19 @@ bool validFileName(char *name) {
         return false;
     } else if (strcmp(name, "<") == 0) {
         return false;
+    }
+    return true;
+}
+
+bool CheckEmptyCommand(char *parsed[MAXPIPE][MAXPARSE]) {
+    bool detectEmpty = false;
+    for (int i = 0; i < MAXPIPE; i++) {
+        if (!detectEmpty && parsed[i][0] == NULL) {
+            detectEmpty = true;
+        } else if (detectEmpty && parsed[i][0] != NULL) {
+            exit_err(MISSING_PIPE_PROGRAM, "error");
+            return false;
+        }
     }
     return true;
 }
@@ -60,11 +73,14 @@ err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
         int outputCnt = pipeOut ? 1 : 0;
         while (parsed[index] != NULL) {
             if (strcmp(parsed[index], ">") == 0) {
+                if (index == 0) {
+                    exit_err(MISSING_PROGRAM, "error");
+                }
                 index++;
                 outputCnt++;
 
                 char *fileName = parsed[index];
-                if (validFileName(fileName)) {
+                if (validateFileName(fileName)) {
                     if (outputCnt > 1) {
                         exit_err(DUPLICATED_OUTPUT_FILE, "error");
                     }
@@ -85,11 +101,14 @@ err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
                     }
                 }
             } else if (strcmp(parsed[index], "<") == 0) {
+                if (index == 0) {
+                    exit_err(MISSING_PROGRAM, "error");
+                }
                 index++;
                 inputCnt++;
 
                 char *fileName = parsed[index];
-                if (validFileName(fileName)) {
+                if (validateFileName(fileName)) {
                     if (inputCnt > 1) {
                         exit_err(DUPLICATED_INPUT_FILE, "error");
                     }
@@ -110,12 +129,15 @@ err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
                 }
 
             } else if (strcmp(parsed[index], ">>") == 0) {
+                if (index == 0) {
+                    exit_err(MISSING_PROGRAM, "error");
+                }
                 index++;
                 outputCnt++;
 
                 // printf("append\n");
                 char *fileName = parsed[index];
-                if (validFileName(fileName)) {
+                if (validateFileName(fileName)) {
                     if (outputCnt > 1) {
                         exit_err(DUPLICATED_OUTPUT_FILE, "error");
                     }
@@ -230,22 +252,24 @@ err_t execute_simple(char **parsed) {
 }
 
 err_t execute_pipe(char *parsed[MAXPIPE][MAXPARSE]) {
-    int pipeCnt = 0;
-    for (int i = 0; i < MAXPIPE; i++) {
-        if (parsed[i][0] != NULL) {
-            pipeCnt++;
-        } else {
-            break;
+    if (CheckEmptyCommand(parsed)) {
+        int pipeCnt = 0;
+        for (int i = 0; i < MAXPIPE; i++) {
+            if (parsed[i][0] != NULL) {
+                pipeCnt++;
+            } else {
+                break;
+            }
         }
-    }
-    int pipefd[MAXPIPE - 1][2];
-    for (int i = 0; i < pipeCnt - 1; i++) {
-        if (pipe(pipefd[i]) < 0) {
-            return OTHER_ERROR;
+        int pipefd[MAXPIPE - 1][2];
+        for (int i = 0; i < pipeCnt - 1; i++) {
+            if (pipe(pipefd[i]) < 0) {
+                return OTHER_ERROR;
+            }
         }
-    }
 
-    RecursiveCreateChild(pipeCnt, 0, pipefd, parsed);
+        RecursiveCreateChild(pipeCnt, 0, pipefd, parsed);
+    }
 
     return NO_ERROR;
 }

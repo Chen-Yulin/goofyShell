@@ -29,6 +29,14 @@ void exit_err(err_t code, char *generater) {
         fputs(generater, stderr);
         fputs("`\n", stderr);
         break;
+    case MISSING_PROGRAM:
+        fputs(generater, stderr);
+        fputs(": missing program\n", stderr);
+        break;
+    case MISSING_PIPE_PROGRAM:
+        fputs(generater, stderr);
+        fputs(": missing program\n", stderr);
+        return;
     default:
         fputs(generater, stderr);
         fputs(": some errors occur\n", stderr);

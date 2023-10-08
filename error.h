@@ -13,7 +13,8 @@ typedef enum {
     DUPLICATED_OUTPUT_FILE, // case 5
     SYNTEX_ERROR,           // case 6
     MISSING_PROGRAM,        // case 7
-    CD_NONE_EXIST_DIR,      // case 8
+    MISSING_PIPE_PROGRAM,
+    CD_NONE_EXIST_DIR, // case 8
     OTHER_ERROR
 } err_t;
 
