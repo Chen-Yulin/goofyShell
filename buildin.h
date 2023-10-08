@@ -7,8 +7,8 @@
 #include <string.h>
 #include <unistd.h>
 
-void exec_exit();
-void exec_pwd();
+void exec_exit(void);
+void exec_pwd(void);
 void exec_cd(char *path);
 void execute_buildin(char **parsed);
 

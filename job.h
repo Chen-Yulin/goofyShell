@@ -6,6 +6,6 @@
 
 extern int jobNum;
 
-void printJobNum();
+void printJobNum(void);
 
 #endif // !DEBUG

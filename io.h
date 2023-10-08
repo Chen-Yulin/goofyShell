@@ -9,9 +9,9 @@
 extern char input_buffer[BUFFER_SIZE];
 extern char output_buffer[BUFFER_SIZE];
 
-void get_cmd_input();
+void get_cmd_input(void);
 
-void show_shell_name();
+void show_shell_name(void);
 void read_cmd_into_buffer(char *res_buffer);
 
 #endif // !IO_H

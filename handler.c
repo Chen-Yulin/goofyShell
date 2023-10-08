@@ -8,7 +8,7 @@ void signal_handler(int signo) {
         }
     }
 }
-void register_handler() {
+void register_handler(void) {
     if (signal(SIGINT, signal_handler) == SIG_ERR) {
         perror("signal");
         exit(1);

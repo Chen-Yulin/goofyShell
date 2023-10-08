@@ -1,6 +1,6 @@
 #include "buildin.h"
 
-void exec_exit() {
+void exec_exit(void) {
     printf("exit\n");
     exit(0);
 }
@@ -10,7 +10,7 @@ void exec_cd(char *path) {
     }
 }
 
-void exec_pwd() {
+void exec_pwd(void) {
     char buf[1024];
     printf("%s\n", getcwd(buf, sizeof(buf)));
     fflush(stdout);
