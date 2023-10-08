@@ -7,4 +7,4 @@
 #include "parse.h"
 #include "process.h"
 
-#endif // !MUMSH_H
+#endif // MUMSH_H

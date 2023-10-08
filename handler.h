@@ -10,4 +10,4 @@
 void signal_handler(int signo);
 void register_handler(void);
 
-#endif // !HANDLER_H
+#endif // HANDLER_H

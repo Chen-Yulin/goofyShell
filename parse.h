@@ -20,4 +20,4 @@ cmd_t judgeCmdType(char *parsedHead);
 void printParsed(char **parsed);
 cmd_t parse(char *input, char *parsed[MAXPIPE][MAXPARSE]);
 
-#endif // !PARSE_H
+#endif // PARSE_H

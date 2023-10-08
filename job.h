@@ -8,4 +8,4 @@ extern int jobNum;
 
 void printJobNum(void);
 
-#endif // !DEBUG
+#endif // JOB_H

@@ -12,4 +12,4 @@ void exec_pwd(void);
 void exec_cd(char *path);
 void execute_buildin(char **parsed);
 
-#endif // !BUILDIN_H
+#endif // BUILDIN_H

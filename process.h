@@ -20,4 +20,4 @@
 err_t execute_simple(char **parsed);
 err_t execute_pipe(char *parsed[MAXPIPE][MAXPARSE]);
 
-#endif // !PROCESS_H
+#endif // PROCESS_H

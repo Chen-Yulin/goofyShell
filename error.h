@@ -20,4 +20,4 @@ typedef enum {
 
 void exit_err(err_t code, char *generater);
 
-#endif // !ERR_H
+#endif // ERR_H
