@@ -27,7 +27,7 @@ void exit_err(err_t code, char *generater) {
     case SYNTEX_ERROR:
         fputs("syntax error near unexpected token `", stderr);
         fputs(generater, stderr);
-        fputs("`\n", stderr);
+        fputs("'\n", stderr);
         break;
     case MISSING_PROGRAM:
         fputs(generater, stderr);
