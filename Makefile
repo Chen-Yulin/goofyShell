@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -std=gnu17 -Wvla -Wall -Wextra -Werror -Wpedantic -Wno-unused-result -Wconversion -g
+CFLAGS = -std=gnu17 -Wvla -Wall -Wextra -Werror -Wpedantic -Wno-unused-result -Wconversion -g -fsanitize=address
 MUMSH_SRC = *.c
 MUMSH_H = *.h
 MUMSH = mumsh

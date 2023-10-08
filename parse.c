@@ -24,7 +24,7 @@ void clearStringArray(char **input, int num) {
 }
 
 void clearParsed(char *parsed[MAXPIPE][MAXPARSE]) {
-    for (int i = 1; i <= MAXPIPE; i++) {
+    for (int i = 1; i < MAXPIPE; i++) {
         parsed[i][0] = NULL;
     }
 }
