@@ -46,6 +46,9 @@ err_t execute_cmd(char **parsed) {
                 char *fileName = parsed[index];
                 // printf("%s\n", fileName);
                 int fd = open(fileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
+                if (fd < 0) {
+                    exit_err(NO_PERMISSION, fileName);
+                }
                 dup2(fd, STDOUT_FILENO);
                 close(fd);
             } else if (strcmp(parsed[index], "<") == 0) {
@@ -53,6 +56,9 @@ err_t execute_cmd(char **parsed) {
                 char *fileName = parsed[index];
                 // printf("%s\n", fileName);
                 int fd = open(fileName, O_RDONLY);
+                if (fd < 0) {
+                    exit_err(NONE_EXIST_FILE, fileName);
+                }
                 dup2(fd, STDIN_FILENO);
                 close(fd);
             } else if (strcmp(parsed[index], ">>") == 0) {
@@ -61,6 +67,9 @@ err_t execute_cmd(char **parsed) {
                 char *fileName = parsed[index];
                 // printf("%s\n", fileName);
                 int fd = open(fileName, O_WRONLY | O_CREAT | O_APPEND, S_IRWXU);
+                if (fd < 0) {
+                    exit_err(NO_PERMISSION, fileName);
+                }
                 dup2(fd, STDOUT_FILENO);
                 close(fd);
             } else {
