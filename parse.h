@@ -9,20 +9,6 @@
 #include <string.h>
 
 typedef enum {
-    NO_ERROR,
-    NONE_EXIST_PROGRAM,
-    NONE_EXIST_FILE,
-    FAIL_OPEN_FILE,
-    DUPLICATED_INPUT_FILE,
-    DUPLICATED_OUTPUT_FILE,
-    SYNTEX_ERROR,
-    MISSING_PROGRAM,
-    CD_NONE_EXIST_DIR,
-    FORK_ERROR,
-    OTHER_ERROR
-} err_t;
-
-typedef enum {
     none_cmd,
     buildin_cmd,
     buildin_stdout_cmd,

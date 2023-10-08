@@ -78,6 +78,7 @@ err_t execute_cmd(char **parsed) {
         break;
     case simple_cmd:
         if (execvp(argv[0], argv) < 0) {
+            exit_err(NONE_EXIST_PROGRAM, argv[0]);
             return NONE_EXIST_PROGRAM;
         }
         break;
@@ -138,7 +139,7 @@ err_t execute_simple(char **parsed) {
     printJobNum();
     pid_t pid = fork();
     if (pid == -1) {
-        return FORK_ERROR;
+        return OTHER_ERROR;
     } else if (pid == 0) {
         execute_cmd(parsed);
         exit(0);
