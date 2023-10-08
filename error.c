@@ -46,5 +46,5 @@ void exit_err(err_t code, char *generater) {
         fputs(": some errors occur\n", stderr);
         break;
     }
-    exit(code);
+    exit((int)code);
 }
