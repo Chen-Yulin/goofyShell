@@ -17,6 +17,8 @@ void exit_err(err_t code, char *generater) {
         fputs(": Permission denied\n", stderr);
         break;
     case DUPLICATED_INPUT_FILE:
+        fflush(stdout);
+        fflush(stdin);
         fputs(generater, stderr);
         fputs(": duplicated input redirection\n", stderr);
         break;
