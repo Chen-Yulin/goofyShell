@@ -32,6 +32,21 @@ bool fetchCommand(char **parsed, char **argv) {
     }
     return redirected;
 }
+
+bool validFileName(char *name) {
+    if (name == NULL) {
+        return false;
+    }
+    if (strcmp(name, ">") == 0) {
+        return false;
+    } else if (strcmp(name, ">>") == 0) {
+        return false;
+    } else if (strcmp(name, "<") == 0) {
+        return false;
+    }
+    return true;
+}
+
 err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
     char *argv[MAXPARSE] = {NULL};
     int argc = 0;
@@ -48,51 +63,79 @@ err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
                 index++;
                 outputCnt++;
 
-                if (outputCnt > 1) {
-                    exit_err(DUPLICATED_OUTPUT_FILE, "error");
-                }
-
                 char *fileName = parsed[index];
-                // printf("%s\n", fileName);
-                int fd = open(fileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
-                if (fd < 0) {
-                    exit_err(NO_PERMISSION, fileName);
+                if (validFileName(fileName)) {
+                    if (outputCnt > 1) {
+                        exit_err(DUPLICATED_OUTPUT_FILE, "error");
+                    }
+
+                    // printf("%s\n", fileName);
+                    int fd =
+                        open(fileName, O_WRONLY | O_CREAT | O_TRUNC, S_IRWXU);
+                    if (fd < 0) {
+                        exit_err(NO_PERMISSION, fileName);
+                    }
+                    dup2(fd, STDOUT_FILENO);
+                    close(fd);
+                } else {
+                    if (fileName) {
+                        exit_err(SYNTEX_ERROR, fileName);
+                    } else if (pipeOut) {
+                        exit_err(SYNTEX_ERROR, "|");
+                    }
                 }
-                dup2(fd, STDOUT_FILENO);
-                close(fd);
             } else if (strcmp(parsed[index], "<") == 0) {
                 index++;
                 inputCnt++;
 
-                if (inputCnt > 1) {
-                    exit_err(DUPLICATED_INPUT_FILE, "error");
+                char *fileName = parsed[index];
+                if (validFileName(fileName)) {
+                    if (inputCnt > 1) {
+                        exit_err(DUPLICATED_INPUT_FILE, "error");
+                    }
+
+                    // printf("%s\n", fileName);
+                    int fd = open(fileName, O_RDONLY);
+                    if (fd < 0) {
+                        exit_err(NONE_EXIST_FILE, fileName);
+                    }
+                    dup2(fd, STDIN_FILENO);
+                    close(fd);
+                } else {
+                    if (fileName) {
+                        exit_err(SYNTEX_ERROR, fileName);
+                    } else if (pipeOut) {
+                        exit_err(SYNTEX_ERROR, "|");
+                    }
                 }
 
-                char *fileName = parsed[index];
-                // printf("%s\n", fileName);
-                int fd = open(fileName, O_RDONLY);
-                if (fd < 0) {
-                    exit_err(NONE_EXIST_FILE, fileName);
-                }
-                dup2(fd, STDIN_FILENO);
-                close(fd);
             } else if (strcmp(parsed[index], ">>") == 0) {
                 index++;
                 outputCnt++;
 
-                if (outputCnt > 1) {
-                    exit_err(DUPLICATED_OUTPUT_FILE, "error");
-                }
-
                 // printf("append\n");
                 char *fileName = parsed[index];
-                // printf("%s\n", fileName);
-                int fd = open(fileName, O_WRONLY | O_CREAT | O_APPEND, S_IRWXU);
-                if (fd < 0) {
-                    exit_err(NO_PERMISSION, fileName);
+                if (validFileName(fileName)) {
+                    if (outputCnt > 1) {
+                        exit_err(DUPLICATED_OUTPUT_FILE, "error");
+                    }
+
+                    // printf("%s\n", fileName);
+                    int fd =
+                        open(fileName, O_WRONLY | O_CREAT | O_APPEND, S_IRWXU);
+                    if (fd < 0) {
+                        exit_err(NO_PERMISSION, fileName);
+                    }
+                    dup2(fd, STDOUT_FILENO);
+                    close(fd);
+                } else {
+                    if (fileName) {
+                        exit_err(SYNTEX_ERROR, fileName);
+                    } else if (pipeOut) {
+                        exit_err(SYNTEX_ERROR, "|");
+                    }
                 }
-                dup2(fd, STDOUT_FILENO);
-                close(fd);
+
             } else {
                 index++;
             }

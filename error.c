@@ -24,6 +24,11 @@ void exit_err(err_t code, char *generater) {
         fputs(generater, stderr);
         fputs(": duplicated input redirection\n", stderr);
         break;
+    case SYNTEX_ERROR:
+        fputs("syntax error near unexpected token `", stderr);
+        fputs(generater, stderr);
+        fputs("`\n", stderr);
+        break;
     default:
         fputs(generater, stderr);
         fputs(": some errors occur\n", stderr);
