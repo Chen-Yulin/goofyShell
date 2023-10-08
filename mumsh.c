@@ -1,6 +1,6 @@
 #include "mumsh.h"
 
-int main() {
+int main(void) {
     char *parsedArgs[MAXPIPE][MAXPARSE];
     register_handler();
     while (1) {
