@@ -47,7 +47,7 @@ bool validateFileName(char *name) {
     return true;
 }
 
-bool CheckEmptyCommand(char *parsed[MAXPIPE][MAXPARSE]) {
+bool CheckEmptyPipe(char *parsed[MAXPIPE][MAXPARSE]) {
     bool detectEmpty = false;
     for (int i = 0; i < MAXPIPE; i++) {
         if (!detectEmpty && parsed[i][0] == NULL) {
@@ -60,7 +60,26 @@ bool CheckEmptyCommand(char *parsed[MAXPIPE][MAXPARSE]) {
     return true;
 }
 
+bool CheckMissingCommand(char **parsed) { // true for missing
+    int index = 0;
+    while (parsed[index] != NULL) {
+        if (strcmp(parsed[index], ">") == 0) {
+            index += 2;
+        } else if (strcmp(parsed[index], "<") == 0) {
+            index += 2;
+        } else if (strcmp(parsed[index], ">>") == 0) {
+            index += 2;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
 err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
+    if (CheckMissingCommand(parsed)) {
+        exit_err(MISSING_PROGRAM, "error");
+    }
     char *argv[MAXPARSE] = {NULL};
     int argc = 0;
     int redirected = fetchCommand(parsed, argv);
@@ -73,9 +92,6 @@ err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
         int outputCnt = pipeOut ? 1 : 0;
         while (parsed[index] != NULL) {
             if (strcmp(parsed[index], ">") == 0) {
-                if (index == 0) {
-                    exit_err(MISSING_PROGRAM, "error");
-                }
                 index++;
                 outputCnt++;
 
@@ -101,9 +117,6 @@ err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
                     }
                 }
             } else if (strcmp(parsed[index], "<") == 0) {
-                if (index == 0) {
-                    exit_err(MISSING_PROGRAM, "error");
-                }
                 index++;
                 inputCnt++;
 
@@ -129,9 +142,6 @@ err_t execute_cmd(char **parsed, bool pipeIn, bool pipeOut) {
                 }
 
             } else if (strcmp(parsed[index], ">>") == 0) {
-                if (index == 0) {
-                    exit_err(MISSING_PROGRAM, "error");
-                }
                 index++;
                 outputCnt++;
 
@@ -252,7 +262,7 @@ err_t execute_simple(char **parsed) {
 }
 
 err_t execute_pipe(char *parsed[MAXPIPE][MAXPARSE]) {
-    if (CheckEmptyCommand(parsed)) {
+    if (CheckEmptyPipe(parsed)) {
         int pipeCnt = 0;
         for (int i = 0; i < MAXPIPE; i++) {
             if (parsed[i][0] != NULL) {
