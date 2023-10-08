@@ -17,6 +17,7 @@ make
 ```
 
 ## Brief documentation
+Please refer to [wiki page](https://focs.ji.sjtu.edu.cn/git/ece482-23fa/YulinChen520370910091-p1/wiki/Docs)
 
 ### Reference
 [Short Guidence](https://www.geeksforgeeks.org/making-linux-shell-c/)
